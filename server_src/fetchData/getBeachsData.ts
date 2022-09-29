@@ -235,6 +235,7 @@ const main = async () => {
     console.log({execPath})
     options = {
       args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
+      ignoreDefaultArgs: ['--disable-extensions'],
       defaultViewport: chrome.defaultViewport,
       executablePath: execPath,
       headless: true,
