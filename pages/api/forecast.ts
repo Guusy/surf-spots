@@ -8,11 +8,13 @@ export default async function  handler(
   res: NextApiResponse
 ) {
   try {
-    const cacheData = CacheService.getDataFromCache()
+    await CacheService.init()
+    const cacheData = await CacheService.getDataFromCache()
     if(!!cacheData){
-      return res.status(200).json(cacheData)
+      return res.status(200).json(JSON.parse(cacheData))
     }
     const response = await getBeachsData()
+    await CacheService.saveData(response)
     res.status(200).json(response)
   } catch (error) {
     console.log('error', error);
