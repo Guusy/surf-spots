@@ -14,10 +14,12 @@ const generateBeachReport = async (beach) => {
   console.log(`Generando reporte de la playa ${beach.name}...`);
   let options = {}
   if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+    const execPath = await chrome.executablePath
+    console.log({execPath})
     options = {
       args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
       defaultViewport: chrome.defaultViewport,
-      executablePath: await chrome.executablePath,
+      executablePath: execPath,
       headless: true,
       ignoreHTTPSErrors: true,
     };
