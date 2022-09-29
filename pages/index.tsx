@@ -78,8 +78,8 @@ const Home: NextPage = () => {
         </div>
 
         <h2> Playas</h2>
-        {beachs.map((beach) => (
-          <a href={beach.url} style={{ width: "100%" }}>
+        {beachs.map((beach, i) => (
+          <a key={i} href={beach.url} style={{ width: "100%" }}>
             <h2>{beach.name} &rarr;</h2>
           </a>
         ))}
