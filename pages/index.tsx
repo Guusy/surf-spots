@@ -1,19 +1,20 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import useSWR from 'swr'
-import BeachItem from '../components/BeachItem'
-import styles from '../styles/Home.module.css'
+import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import useSWR from "swr";
+import BeachItem from "../components/BeachItem";
+import { beachs } from "../server_src/domain/Beach";
+import styles from "../styles/Home.module.css";
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json())
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 const Home: NextPage = () => {
-  const { data, error } = useSWR('/api/forecast', fetcher)
+  const { data, error } = useSWR("/api/forecast", fetcher);
 
-  if (error) return <div>Failed to load</div>
-  if (!data) return <div>Loading...</div>
+  if (error) return <div>Failed to load</div>;
+  if (!data) return <div>Loading...</div>;
 
-  const { today, tomorrow } = data
+  const { today, tomorrow } = data;
   return (
     <div className={styles.container}>
       <Head>
@@ -23,59 +24,66 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Surf spots
-        </h1>
+        <h1 className={styles.title}>Surf spots</h1>
 
-        <p className={styles.description}>
-         Hoy
-        </p>
-        {/* { data.today } */}
-        <div style={{ width:'100%', textAlign:'start'}}>
-
-        <div>6 am  <BeachItem data= {today.dawn}/></div>
-        <div>9 am <BeachItem data= {today.midMorning}/></div>
-        <div>12 pm <BeachItem data= {today.noon}/></div>
-        <div> 3 pm <BeachItem data= {today.afternoon}/></div>
-        <div>6 pm   <BeachItem data= {today.sunset}/></div>
+        <p className={styles.description}>Hoy</p>
+        <div style={{ width: "100%", textAlign: "start" }}>
+          <hr />
+          <div>
+            {" "}
+            <div> 6 am </div> <BeachItem data={today.dawn} />
+          </div>
+          <hr />
+          <div>
+            <div>9 am </div> <BeachItem data={today.midMorning} />
+          </div>
+          <hr />
+          <div>
+            <div>12 pm </div> <BeachItem data={today.noon} />
+          </div>
+          <hr />
+          <div>
+            <div> 3 pm </div> <BeachItem data={today.afternoon} />
+          </div>
+          <hr />
+          <div>
+            <div>6 pm </div> <BeachItem data={today.sunset} />
+          </div>
+          <hr />
         </div>
-        
-        
-       
-        
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <p className={styles.description}>Mañana</p>
+        <div style={{ width: "100%", textAlign: "start" }}>
+          <hr />
+          <div>
+            {" "}
+            <div> 6 am </div> <BeachItem data={tomorrow.dawn} />
+          </div>
+          <hr />
+          <div>
+            <div>9 am </div> <BeachItem data={tomorrow.midMorning} />
+          </div>
+          <hr />
+          <div>
+            <div>12 pm </div> <BeachItem data={tomorrow.noon} />
+          </div>
+          <hr />
+          <div>
+            <div> 3 pm </div> <BeachItem data={tomorrow.afternoon} />
+          </div>
+          <hr />
+          <div>
+            <div>6 pm </div> <BeachItem data={tomorrow.sunset} />
+          </div>
+          <hr />
         </div>
-        <p className={styles.description}>
-         Mañana
-         
-        </p>
+
+        <h2> Playas</h2>
+        {beachs.map((beach) => (
+          <a href={beach.url} style={{ width: "100%" }}>
+            <h2>{beach.name} &rarr;</h2>
+          </a>
+        ))}
       </main>
 
       <footer className={styles.footer}>
@@ -88,7 +96,7 @@ const Home: NextPage = () => {
         </a>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

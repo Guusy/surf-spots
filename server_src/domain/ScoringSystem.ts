@@ -1,4 +1,4 @@
-import Beach, { BeachData } from "./Beach";
+import Beach, { HourHandBeach, Tides } from "./Beach";
 
 const points = {
   Offshore: 3,
@@ -13,6 +13,7 @@ type Score = {
   score: number
 }
 type ScoreDay = {
+  tides: Tides
   dawn: Score[]
   midMorning: Score[],
   noon: Score[],
@@ -26,11 +27,9 @@ type DayData = {
 class ScoringSystem {
   beachs!: Beach[];
   // TODO: ADD TESTS !!!!
-  // TODO: DO a siglenton
   bestBeachsByDayHourhand(beachs : Beach[]): DayData {    
-    const today = beachs.flatMap( beach => beach.today)
-    const tomorrow = beachs.flatMap( beach => beach.tomorrow)
-    
+    const today = beachs.flatMap( beach => beach.today.hourHands.map(b => ({...b, tides: beach.today.tides})))
+    const tomorrow = beachs.flatMap( beach => beach.tomorrow.hourHands.map(b => ({...b, tides: beach.tomorrow.tides})))
     return {
       today: this.calculateFinalScores(today),
       tomorrow: this.calculateFinalScores(tomorrow),
@@ -61,7 +60,7 @@ class ScoringSystem {
     }, {});
   }
 
-  caculateScore(beach: BeachData): number {
+  caculateScore(beach: HourHandBeach): number {
     const windPower = this.calculateWindPowerScore(beach.wind);
     const windDirectionScore = points[beach.wind.direction] || 0;
     // TODO: use wind type, gentle, light, moderate

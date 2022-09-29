@@ -16,9 +16,16 @@ const metersCastToNumber = (metersString, units) => {
     to: roundOneDecimal(to),
   };
 };
-export type BeachData = {
+
+export type Tides = {
+  firstLow: number;
+  firstHigh: number;
+  secondLow: number;
+  secondHigh: number;
+};
+export type HourHandBeach = {
   id: string;
-  name: string
+  name: string;
   status: string;
   meters: { from: number; to: number };
   activeStars: number;
@@ -29,16 +36,57 @@ export type BeachData = {
   wind: { direction: string; min: number; max: number };
   score: number;
 };
+
+export type DayBeachData = { tides: Tides; hourHands: HourHandBeach[] };
+export const beachs = [
+  {
+    name: "Cardiel",
+    url: "https://magicseaweed.com/La-Pepita-Surf-Report/2707/",
+  },
+  {
+    name: "Biologia",
+    url: "https://magicseaweed.com/Biologia-Surf-Report/2704/",
+  },
+  {
+    name: "Waikiki",
+    url: "https://magicseaweed.com/Waikiki-Mar-del-Plata-Surf-Report/2708/",
+  },
+  {
+    name: "Mariano",
+    url: "https://magicseaweed.com/Mariano-Surf-Report/2709/",
+  },
+  { name: "Serena", url: "https://magicseaweed.com/Serena-Surf-Report/1287/" },
+  {
+    name: "Chapa",
+    url: "https://magicseaweed.com/Las-Cuevas-La-Popular-Surf-Report/1159/",
+  },
+];
+
+const castToNumber = (aString: string) => {
+  return Number.parseInt(aString, 10);
+};
+
+const castToFloat = (aString: string) => {
+  return Number.parseFloat(aString);
+};
+const removeString = (aString: string, stringToRemove: string) => {
+  return aString.replace(stringToRemove, "");
+};
 class Beach {
   name!: string;
-  today!: BeachData[];
-  tomorrow!: BeachData[];
+  today!: DayBeachData;
+  tomorrow!: DayBeachData;
 
-  static normalizeData = (data: any[], beachName: string): BeachData[] => {
+  static normalizeData = (
+    data: { tide: any; hourHands: any[] },
+    beachName: string
+  ): DayBeachData => {
+    const { tide, hourHands } = data;
+
     //Add type
-    return data.map((momentOfDay: any) => {
+    const hourHandsMapped = hourHands.map((momentOfDay: any) => {
       const units = momentOfDay.meters.includes("ft") ? "ft" : "m";
-      const newMomentOfDay: BeachData = { ...momentOfDay };
+      const newMomentOfDay = { ...momentOfDay };
       const avgMeterCalculation = metersCastToNumber(
         newMomentOfDay.averageMeters,
         units
@@ -47,29 +95,28 @@ class Beach {
       const [, windType] = windString.split(" ");
       newMomentOfDay.wind = {
         direction: windType,
-        min: Number.parseInt(newMomentOfDay.wind.min, 10),
-        max: Number.parseInt(
-          newMomentOfDay.wind.max.replace("mph", "").replace("kph", ""),
-          10
+        min: castToNumber(newMomentOfDay.wind.min),
+        max: castToNumber(
+          removeString(removeString(newMomentOfDay.wind.max, "mph"), "kph")
         ),
       };
 
-      newMomentOfDay.period = Number.parseInt(
-        newMomentOfDay.period.split("s")[0],
-        10
-      );
+      newMomentOfDay.period = castToNumber(newMomentOfDay.period.split("s")[0]);
       newMomentOfDay.meters = metersCastToNumber(newMomentOfDay.meters, units);
       newMomentOfDay.averageMeters = avgMeterCalculation.from;
       newMomentOfDay.score = ScoringSystem.caculateScore(newMomentOfDay);
-      newMomentOfDay.name = beachName
+      newMomentOfDay.name = beachName;
       return {
         ...newMomentOfDay,
       };
     });
+
+    return {
+      tides: tide,
+      hourHands: hourHandsMapped,
+    };
   };
   static fromJSON(json: { name: string; data: { today: any; tomorrow: any } }) {
-    console.log(JSON.stringify(json));
-
     const { name, data } = json;
     const normalizeData = {
       name,
