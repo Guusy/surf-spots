@@ -29,6 +29,8 @@ const dayHours = [
     id: "sunset",
   },
 ];
+
+//@ts-ignore
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 const Home: NextPage = () => {

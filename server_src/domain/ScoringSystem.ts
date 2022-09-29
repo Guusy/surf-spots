@@ -44,7 +44,7 @@ class ScoringSystem {
     };
   }
 
-  calculateFinalScores(scores) {
+  calculateFinalScores(scores : any[]) {
     return scores.reduce((prev, actual) => {
 
       const prevHourHand = prev[actual.id];
@@ -53,11 +53,11 @@ class ScoringSystem {
         return { ...prev, [actual.id]: [{ ...actual }] };
       }
 
-      if (prevHourHand.find((phh) => phh.score === actual.score)) {
+      if (prevHourHand.find((phh: { score: number}) => phh.score === actual.score)) {
         return { ...prev, [actual.id]: [...prev[actual.id], { ...actual }] };
       }
       const lessValueIndex = prevHourHand.findIndex(
-        (phh) => phh.score < actual.score
+        (phh: { score: number}) => phh.score < actual.score
       );
       if (lessValueIndex === -1) {
         return prev;
@@ -69,7 +69,9 @@ class ScoringSystem {
   }
 
   caculateScore(beach: HourHandBeach): number {
+    //@ts-ignore
     const windDirectionScore = points[beach.wind.direction] || 0;
+    //@ts-ignore
     const windTypeScore = windTypesPoints[beach.wind.type] || 0;
     return beach.averageMeters + beach.period + windDirectionScore  + windTypeScore;
   }

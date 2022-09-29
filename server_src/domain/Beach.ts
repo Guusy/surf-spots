@@ -1,8 +1,8 @@
 import ScoringSystem from "./ScoringSystem";
 
-const roundOneDecimal = (value) => Math.round(value * 10) / 10;
+const roundOneDecimal = (value: number) => Math.round(value * 10) / 10;
 
-const metersCastToNumber = (metersString, units) => {
+const metersCastToNumber = (metersString :string, units: string) => {
   const [minMeter, maxMeter] = metersString.split("-");
   let from = Number.parseFloat(minMeter);
   let to = maxMeter ? Number.parseFloat(maxMeter.replace(units, "")) : 0;
