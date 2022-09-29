@@ -1,15 +1,29 @@
-/**
- * @name get text value of an element
- *
- * @desc Gets the text value of an element by using the page.$eval method
- *
- */
-const puppeteer = require("puppeteer");
+let chrome = {};
+let puppeteer;
+
+if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+  chrome = require("chrome-aws-lambda");
+  puppeteer = require("puppeteer-core");
+} else {
+  puppeteer = require("puppeteer");
+}
+
 
 // TODO: get tides
 const generateBeachReport = async (beach) => {
   console.log(`Generando reporte de la playa ${beach.name}...`);
-  const browser = await puppeteer.launch();
+  let options = {}
+  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+    options = {
+      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
+      defaultViewport: chrome.defaultViewport,
+      executablePath: await chrome.executablePath,
+      headless: true,
+      ignoreHTTPSErrors: true,
+    };
+  }
+
+  const browser = await puppeteer.launch(options);
   const page = await browser.newPage();
   await page.setViewport({
     width: 1200,
