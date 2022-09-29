@@ -1,3 +1,4 @@
+// @ts-nocheck
 import getBestTimeSurfBeach from "../data_manipulation/getBestTimeSurfBeach";
 import generateBeachReport from "./specificBeachScrap";
 
@@ -214,11 +215,38 @@ const beachs = [
     url: "https://magicseaweed.com/La-Pepita-Surf-Report/2707/",
   },
 ];
-const main = () => {
+
+
+const main = async () => {
   // return getBestTimeSurfBeach(mockData); // MOCKING
+  let chrome = {};
+  let puppeteer;
+  
+  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+    chrome = require("chrome-aws-lambda");
+    puppeteer = require("puppeteer-core");
+  } else {
+    puppeteer = require("puppeteer");
+  }
+
+  let options = {}
+  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+    const execPath = await chrome.executablePath
+    console.log({execPath})
+    options = {
+      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
+      defaultViewport: chrome.defaultViewport,
+      executablePath: execPath,
+      headless: true,
+      ignoreHTTPSErrors: true,
+    };
+  }
+
+  const browser = await puppeteer.launch(options);
+
   return Promise.all(
     beachs.map(async (beach) => {
-      const data = await generateBeachReport(beach);
+      const data = await generateBeachReport(browser, beach);
       return { name: beach.name, data};
     })
   ).then((beachsResponse) => {

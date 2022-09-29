@@ -10,22 +10,9 @@ if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
 
 
 // TODO: get tides
-const generateBeachReport = async (beach) => {
+const generateBeachReport = async ( browser, beach) => {
   console.log(`Generando reporte de la playa ${beach.name}...`);
-  let options = {}
-  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-    const execPath = await chrome.executablePath
-    console.log({execPath})
-    options = {
-      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
-      defaultViewport: chrome.defaultViewport,
-      executablePath: execPath,
-      headless: true,
-      ignoreHTTPSErrors: true,
-    };
-  }
-
-  const browser = await puppeteer.launch(options);
+ 
   const page = await browser.newPage();
   await page.setViewport({
     width: 1200,
