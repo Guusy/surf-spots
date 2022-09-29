@@ -243,7 +243,6 @@ const main = async () => {
   }
 
   const browser = await puppeteer.launch(options);
-
   return Promise.all(
     beachs.map(async (beach) => {
       const data = await generateBeachReport(browser, beach);

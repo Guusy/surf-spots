@@ -1,12 +1,4 @@
-let chrome = {};
-let puppeteer;
 
-if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  chrome = require("chrome-aws-lambda");
-  puppeteer = require("puppeteer-core");
-} else {
-  puppeteer = require("puppeteer");
-}
 
 
 // TODO: get tides
@@ -130,8 +122,4 @@ const generateBeachReport = async ( browser, beach) => {
   return data;
 };
 
-generateBeachReport({
-  name: "Cardiel",
-  url: "https://magicseaweed.com/La-Pepita-Surf-Report/2707/",
-});
 module.exports = generateBeachReport;
