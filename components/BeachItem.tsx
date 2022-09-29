@@ -8,7 +8,7 @@ function BeachItem(props: any) {
   const [open, setOpen] = useState(false)
 
   return <div className={styles['beach-item']} onClick={ () => setOpen(!open)}>
-     {name}  {averageMeters}M {wind.direction} {wind.min}-{wind.max} kph 
+     {name} -  {averageMeters}m, {wind.direction} ({wind.type}) {wind.min}-{wind.max} kph 
      {open && <div
      style={{display:'flex', justifyContent:'space-between', marginTop:'0.5em'}}>
       <div>
@@ -22,7 +22,8 @@ function BeachItem(props: any) {
         <b>Swell</b>
         <p>  {meters.from} - {meters.to} M</p>
         <b>Viento</b>
-        <p>{wind.direction} {wind.min}-{wind.max} kph </p>
+        <p>{wind.direction}  </p>
+        <p>{wind.min}-{wind.max} kph ({wind.type})</p>
         </div>
       </div>}
      </div>

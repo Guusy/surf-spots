@@ -215,7 +215,7 @@ const beachs = [
   },
 ];
 const main = () => {
-  // return getBestTimeSurfBeach(mockData); MOCK
+  // return getBestTimeSurfBeach(mockData); // MOCKING
   return Promise.all(
     beachs.map(async (beach) => {
       const data = await generateBeachReport(beach);

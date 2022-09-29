@@ -91,10 +91,11 @@ class Beach {
         newMomentOfDay.averageMeters,
         units
       );
-      const [, windString] = newMomentOfDay.wind.direction.split(",");
-      const [, windType] = windString.split(" ");
+      const [type, windString] = newMomentOfDay.wind.direction.split(",");
+      const [, windDirection] = windString.split(" ");
       newMomentOfDay.wind = {
-        direction: windType,
+        type,
+        direction: windDirection,
         min: castToNumber(newMomentOfDay.wind.min),
         max: castToNumber(
           removeString(removeString(newMomentOfDay.wind.max, "mph"), "kph")

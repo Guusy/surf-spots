@@ -8,6 +8,14 @@ const points = {
   Onshore: -3,
 };
 
+const windTypesPoints = {
+  'Very Light':5,
+  Light: 4,
+  Gentle: 3,
+  Moderate: -1,
+  Fresh: -2,
+}
+
 type Score = {
   name: string,
   score: number
@@ -61,24 +69,12 @@ class ScoringSystem {
   }
 
   caculateScore(beach: HourHandBeach): number {
-    const windPower = this.calculateWindPowerScore(beach.wind);
     const windDirectionScore = points[beach.wind.direction] || 0;
-    // TODO: use wind type, gentle, light, moderate
-    return beach.averageMeters + beach.period + windDirectionScore + windPower;
+    const windTypeScore = windTypesPoints[beach.wind.type] || 0;
+    return beach.averageMeters + beach.period + windDirectionScore  + windTypeScore;
   }
 
 
-  calculateWindPowerScore(wind) {
-    if (wind.max <= 10) {
-      return 2;
-    }
-
-    if (wind.max <= 18) {
-      return 1;
-    }
-
-    return -1;
-  }
 
 }
 

@@ -123,6 +123,10 @@
   margin-bottom: 0.5em;
 }
 
+.dayhour{
+  font-size: 1.5em;
+}
+
 @media (prefers-color-scheme: dark) {
   .card,
   .footer {

@@ -3,16 +3,39 @@ import Head from "next/head";
 import Image from "next/image";
 import useSWR from "swr";
 import BeachItem from "../components/BeachItem";
+import Loader from "../components/Loader";
 import { beachs } from "../server_src/domain/Beach";
 import styles from "../styles/Home.module.css";
 
+const dayHours = [
+  {
+    label: "6 AM",
+    id: "dawn",
+  },
+  {
+    label: "9 AM",
+    id: "midMorning",
+  },
+  {
+    label: "12 PM",
+    id: "noon",
+  },
+  {
+    label: "3 PM",
+    id: "afternoon",
+  },
+  {
+    label: "6 PM",
+    id: "sunset",
+  },
+];
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 const Home: NextPage = () => {
   const { data, error } = useSWR("/api/forecast", fetcher);
-
+  
   if (error) return <div>Failed to load</div>;
-  if (!data) return <div>Loading...</div>;
+  if (!data) return <Loader />;
 
   const { today, tomorrow } = data;
   return (
@@ -28,54 +51,30 @@ const Home: NextPage = () => {
 
         <p className={styles.description}>Hoy</p>
         <div style={{ width: "100%", textAlign: "start" }}>
-          <hr />
-          <div>
-            {" "}
-            <div> 6 am </div> <BeachItem data={today.dawn} />
-          </div>
-          <hr />
-          <div>
-            <div>9 am </div> <BeachItem data={today.midMorning} />
-          </div>
-          <hr />
-          <div>
-            <div>12 pm </div> <BeachItem data={today.noon} />
-          </div>
-          <hr />
-          <div>
-            <div> 3 pm </div> <BeachItem data={today.afternoon} />
-          </div>
-          <hr />
-          <div>
-            <div>6 pm </div> <BeachItem data={today.sunset} />
-          </div>
-          <hr />
+          {dayHours.map((dayHour) => (
+            <>
+              <div>
+                <div className={styles.dayhour}> {dayHour.label} </div>{" "}
+                <BeachItem data={today[dayHour.id]} />
+              </div>
+              <hr />
+            </>
+          ))}
         </div>
 
         <p className={styles.description}>Mañana</p>
         <div style={{ width: "100%", textAlign: "start" }}>
           <hr />
-          <div>
-            {" "}
-            <div> 6 am </div> <BeachItem data={tomorrow.dawn} />
-          </div>
-          <hr />
-          <div>
-            <div>9 am </div> <BeachItem data={tomorrow.midMorning} />
-          </div>
-          <hr />
-          <div>
-            <div>12 pm </div> <BeachItem data={tomorrow.noon} />
-          </div>
-          <hr />
-          <div>
-            <div> 3 pm </div> <BeachItem data={tomorrow.afternoon} />
-          </div>
-          <hr />
-          <div>
-            <div>6 pm </div> <BeachItem data={tomorrow.sunset} />
-          </div>
-          <hr />
+          {dayHours.map((dayHour) => (
+            <>
+              <div>
+                <div className={styles.dayhour}> {dayHour.label} </div>{" "}
+                <BeachItem data={tomorrow[dayHour.id]} />
+              </div>
+              <hr />
+            </>
+          ))}
+      
         </div>
 
         <h2> Playas</h2>
